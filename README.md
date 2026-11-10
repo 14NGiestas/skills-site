@@ -32,7 +32,7 @@ jobs:
         with:
           enablement: true
       - id: site
-        uses: 14NGiestas/skills-site@main
+        uses: 14NGiestas/skills-site@v1
         with:
           title: "My Skills"
       - uses: actions/upload-pages-artifact@v3
@@ -51,6 +51,8 @@ jobs:
 ```
 
 Enable Pages once under **Settings → Pages → Source: GitHub Actions**.
+
+Pin the action to the major tag (`@v1`). The tag moves only for backward-compatible changes.
 
 ## Inputs
 
