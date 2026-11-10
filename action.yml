@@ -1,0 +1,66 @@
+name: Build skills site
+description: Generate a static catalog site from Markdown SKILL.md files.
+author: 14NGiestas
+branding:
+  icon: book-open
+  color: green
+
+inputs:
+  source:
+    description: Path to the repository containing SKILL.md files.
+    required: false
+    default: "."
+  output:
+    description: Directory where the generated site is written.
+    required: false
+    default: "_site"
+  title:
+    description: Site title.
+    required: false
+    default: "AI Skills"
+  repository:
+    description: owner/repo used for GitHub links. Defaults to the caller repository.
+    required: false
+    default: ""
+  ref:
+    description: Git ref used for raw links. Defaults to the caller ref.
+    required: false
+    default: ""
+
+outputs:
+  site-path:
+    description: Path to the generated site.
+    value: ${{ steps.build.outputs.site-path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.x"
+
+    - name: Install PyYAML
+      shell: bash
+      run: pip install pyyaml
+
+    - name: Build site
+      id: build
+      shell: bash
+      env:
+        INPUT_SOURCE: ${{ inputs.source }}
+        INPUT_OUTPUT: ${{ inputs.output }}
+        INPUT_TITLE: ${{ inputs.title }}
+        INPUT_REPOSITORY: ${{ inputs.repository }}
+        INPUT_REF: ${{ inputs.ref }}
+      run: |
+        REPOSITORY="${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}"
+        REF="${INPUT_REF:-$GITHUB_REF_NAME}"
+        python3 "$GITHUB_ACTION_PATH/scripts/build_site.py" \
+          --source "$INPUT_SOURCE" \
+          --assets "$GITHUB_ACTION_PATH/site" \
+          --output "$INPUT_OUTPUT" \
+          --title "$INPUT_TITLE" \
+          --repository "$REPOSITORY" \
+          --ref "$REF"
+        echo "site-path=$INPUT_OUTPUT" >> "$GITHUB_OUTPUT"

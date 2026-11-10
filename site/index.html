@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skills catalog</title>
+  <meta name="description" content="A catalog of AI skills built from Markdown SKILL.md files.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" id="brand" href="./">Skills</a>
+      <div class="header-actions">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="pt">PT</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1 id="hero-title">Skills catalog</h1>
+      <p id="hero-subtitle">Open a skill, copy it, or install the whole catalog.</p>
+      <div class="hero-links">
+        <a id="link-github" href="https://github.com/">GitHub</a>
+        <a id="link-manifest" href="#">llms.txt</a>
+        <a id="link-opencode" href="#">opencode.json</a>
+      </div>
+    </section>
+
+    <section class="controls">
+      <input id="search" type="search" placeholder="Search skills..." aria-label="Search skills">
+      <div id="filters" class="filters"></div>
+    </section>
+
+    <section id="catalog" class="catalog" aria-live="polite"></section>
+    <p id="empty" class="empty" hidden>No skills found.</p>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p><a id="footer-github" href="https://github.com/">Source</a> · <a id="footer-manifest" href="#">Agent manifest</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
