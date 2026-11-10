@@ -211,6 +211,10 @@ def main() -> int:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(SWITCHER_RE.sub("", text), encoding="utf-8")
 
+        references = path.parent / "references"
+        if references.is_dir():
+            shutil.copytree(references, target.parent / "references", dirs_exist_ok=True)
+
         entries.append({
             "name": name,
             "title": title,

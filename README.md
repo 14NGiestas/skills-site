@@ -78,6 +78,7 @@ Pin the action to the major tag (`@v1`). The tag moves only for backward-compati
 - Language comes from the top-level folder (`en`, `pt-br` → `pt`, `es`, `fr`, `de`); otherwise `en`.
 - Category comes from `metadata.category` (string or `{en, pt}` map), then known folders, then the first folder name.
 - Grouping/order can be set with `metadata.group` and `metadata.order`.
+- A skill's `references/` folder is copied alongside its `SKILL.md`, so progressive-disclosure links keep working on the generated site.
 
 ## License
 
