@@ -47,22 +47,20 @@ function setLang(next) {
 }
 
 function applySiteLinks() {
-  if (!siteRepository) return;
-  const base = `https://github.com/${siteRepository}`;
-  const raw = `https://raw.githubusercontent.com/${siteRepository}/${siteRef}`;
-  const links = {
-    "link-github": base,
-    "link-manifest": `${raw}/llms.txt`,
-    "link-opencode": `${raw}/opencode.json`,
-    "footer-github": base,
-    "footer-manifest": `${raw}/llms.txt`,
-  };
-  for (const [id, href] of Object.entries(links)) {
-    const element = document.getElementById(id);
-    if (element) element.href = href;
-  }
   const brand = document.getElementById("brand");
   if (brand) brand.textContent = siteTitle || "Skills";
+  for (const id of ["link-catalog", "footer-catalog"]) {
+    const element = document.getElementById(id);
+    if (element) element.href = "catalog.md";
+  }
+  const llms = document.getElementById("link-llms");
+  if (llms) llms.href = "llms.txt";
+  if (!siteRepository) return;
+  const base = `https://github.com/${siteRepository}`;
+  for (const id of ["link-github", "footer-github"]) {
+    const element = document.getElementById(id);
+    if (element) element.href = base;
+  }
 }
 
 function groups() {

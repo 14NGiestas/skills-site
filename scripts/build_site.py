@@ -31,6 +31,7 @@ except ModuleNotFoundError:
 SKIP_DIRS = {".git", ".github", ".opencode", "node_modules", "docs", "site", "_site"}
 LANGUAGE_DIRS = {"en", "pt", "pt-br", "es", "fr", "de"}
 LANGUAGE_ALIASES = {"pt-br": "pt", "pt_br": "pt", "en-us": "en", "en_us": "en"}
+LANGUAGE_LABELS = {"en": "English", "pt": "Português", "es": "Español", "fr": "Français", "de": "Deutsch"}
 SWITCHER_RE = re.compile(r"^> .*SKILL\.md\).*$\n?", re.MULTILINE)
 
 KNOWN_CATEGORIES = {
@@ -239,6 +240,63 @@ def main() -> int:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+    groups: dict[str, list[dict]] = {}
+    for entry in entries:
+        groups.setdefault(entry["language"], []).append(entry)
+
+    catalog_lines = [
+        f"# {args.title}",
+        "",
+        "> Agent-friendly catalog. Each entry links directly to a Markdown `SKILL.md`.",
+        "",
+    ]
+    if args.repository:
+        catalog_lines.append(f"Repository: https://github.com/{args.repository}")
+    catalog_lines.extend(["JSON data: skills.json", "", "## Skills", ""])
+    for language, items in groups.items():
+        catalog_lines.append(f"### {LANGUAGE_LABELS.get(language, language.upper())}")
+        catalog_lines.append("")
+        for entry in items:
+            catalog_lines.append(
+                f"- [{entry['title']}]({entry['path']}): {entry['description']}"
+            )
+        catalog_lines.append("")
+    (output / "catalog.md").write_text("\n".join(catalog_lines), encoding="utf-8")
+
+    manifest_lines = [
+        f"# {args.title}",
+        "",
+        "> Agent-friendly catalog. Each skill links directly to its Markdown source.",
+        "",
+    ]
+    if args.repository:
+        owner, repo_name = args.repository.split("/", 1)
+        owner_slug = owner.lower()
+        repo_slug = repo_name.lower()
+        website = (
+            f"https://{owner_slug}.github.io/"
+            if repo_slug == f"{owner_slug}.github.io"
+            else f"https://{owner_slug}.github.io/{repo_name}/"
+        )
+        manifest_lines.extend([
+            f"Repository: https://github.com/{args.repository}",
+            f"Website: {website}",
+            f"Full file tree: https://api.github.com/repos/{args.repository}/git/trees/{args.ref}?recursive=1",
+        ])
+    manifest_lines.extend(["JSON data: skills.json", ""])
+    for language, items in groups.items():
+        manifest_lines.append(f"## {LANGUAGE_LABELS.get(language, language.upper())}")
+        manifest_lines.append("")
+        for entry in items:
+            if args.repository:
+                link = f"https://raw.githubusercontent.com/{args.repository}/{args.ref}/{entry['source']}"
+            else:
+                link = entry["path"]
+            manifest_lines.append(f"- [{entry['name']}]({link}): {entry['description']}")
+        manifest_lines.append("")
+    (output / "llms.txt").write_text("\n".join(manifest_lines), encoding="utf-8")
+
     print(f"Built {len(entries)} skill entries in {output}")
     return 0
 

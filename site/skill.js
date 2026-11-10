@@ -7,6 +7,7 @@ const STRINGS = {
     loading: "Loading…",
     missing: "Skill not found.",
     source: "Source",
+    raw: "Raw Markdown",
   },
   pt: {
     back: "← Voltar ao catálogo",
@@ -16,6 +17,7 @@ const STRINGS = {
     loading: "Carregando…",
     missing: "Skill não encontrada.",
     source: "Fonte",
+    raw: "Markdown bruto",
   },
 };
 
@@ -115,7 +117,7 @@ async function main() {
     </div>
     <h1>${escapeHtml(entry.title)}</h1>
     <p class="lead">${escapeHtml(entry.description)}</p>
-    <p class="source">${escapeHtml(STRINGS[lang].source)}: ${sourceHtml}</p>`;
+    <p class="source">${escapeHtml(STRINGS[lang].source)}: ${sourceHtml} · <a href="${escapeHtml(entry.path)}">${escapeHtml(STRINGS[lang].raw)}</a></p>`;
 
   const response = await fetch(entry.path);
   if (!response.ok) throw new Error(STRINGS[lang].missing);

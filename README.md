@@ -80,6 +80,17 @@ Pin the action to the major tag (`@v1`). The tag moves only for backward-compati
 - Grouping/order can be set with `metadata.group` and `metadata.order`.
 - A skill's `references/` folder is copied alongside its `SKILL.md`, so progressive-disclosure links keep working on the generated site.
 
+## Generated files
+
+The action always writes these next to the site:
+
+- `skills.json` — machine-readable catalog.
+- `catalog.md` — agent-friendly catalog with relative links to each `SKILL.md`.
+- `llms.txt` — agent manifest with absolute raw GitHub links.
+- `skills/<name>/SKILL.md` — a copy of each skill (plus `references/`).
+
+`llms.txt` and `catalog.md` are generated from the discovered skills; do not commit or hand-edit them in the source repository.
+
 ## License
 
 MIT
