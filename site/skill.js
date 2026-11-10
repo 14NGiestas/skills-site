@@ -43,6 +43,21 @@ function escapeHtml(value) {
   }[char]));
 }
 
+function resolveRelativeLinks(container, skillPath) {
+  const base = skillPath.includes("/")
+    ? skillPath.slice(0, skillPath.lastIndexOf("/") + 1)
+    : "";
+  const isAbsolute = (value) => /^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(value);
+  for (const anchor of container.querySelectorAll("a[href]")) {
+    const href = anchor.getAttribute("href");
+    if (href && !isAbsolute(href)) anchor.setAttribute("href", base + href);
+  }
+  for (const image of container.querySelectorAll("img[src]")) {
+    const src = image.getAttribute("src");
+    if (src && !isAbsolute(src)) image.setAttribute("src", base + src);
+  }
+}
+
 function stripFrontmatter(text) {
   if (!text.startsWith("---")) return text;
   const lines = text.split("\n");
@@ -128,6 +143,7 @@ async function main() {
   } catch {
     $("#content").innerHTML = `<pre>${escapeHtml(bodyText)}</pre>`;
   }
+  resolveRelativeLinks($("#content"), entry.path);
 
   $("#copy").addEventListener("click", async () => {
     const strings = STRINGS[lang];
